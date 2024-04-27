@@ -4,6 +4,13 @@ import {
   CircularProgress,
   Grid,
   IconButton,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextField,
   Tooltip,
   Typography,
@@ -197,19 +204,48 @@ const HomePage = () => {
             <CircularProgress />
           </Grid>
         )}
-        {!loading && predictions && (
-          <Grid item>
-            {predictions.map((prediction, index) => (
-              <div key={`prediction-${index}`}>
-                <TextField disabled value={prediction.date} />
-                {prediction.predictions.map((pred, index2) => (
-                  <TextField
-                    key={`prediction-${index}-${index2}`}
-                    value={`Room id ${pred.room_id} : ${pred.room_cnt}`}
-                  />
-                ))}
-              </div>
-            ))}
+        {!loading && predictions.length !== 0 && (
+          <Grid item minWidth="70vw">
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Date</TableCell>
+                    <TableCell align="right">Room ID</TableCell>
+                    <TableCell align="right">Count</TableCell>
+                    <TableCell align="right">Low Boundary</TableCell>
+                    <TableCell align="right">High Boundary</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {predictions.map((prediction, i) =>
+                    prediction.predictions.map((pred, index) => (
+                      <TableRow
+                        key={`prediction-${prediction.date}-${index}`}
+                        sx={{
+                          borderTop:
+                            index === 0 && i !== 0 ? "2px solid blue" : "",
+                        }}
+                      >
+                        {index === 0 && (
+                          <TableCell rowSpan={prediction.predictions.length}>
+                            {prediction.date}
+                          </TableCell>
+                        )}
+                        <TableCell align="right">{pred.room_id}</TableCell>
+                        <TableCell align="right">{pred.room_cnt}</TableCell>
+                        <TableCell align="right">
+                          {pred.low_boundary ?? "N/A"}
+                        </TableCell>
+                        <TableCell align="right">
+                          {pred.high_boundary ?? "N/A"}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Grid>
         )}
       </Grid>
