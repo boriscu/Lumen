@@ -88,11 +88,26 @@ def delete_file():
 
 @file_blueprint.route("/", methods=["GET"])
 def check_file():
-    for filename in os.listdir("storage/"):
-        if filename.endswith(".parquet"):
-            return jsonify({"filename": filename, "exists": True}), 200
+    parquet_exists = any(
+        filename.endswith(".parquet") for filename in os.listdir("storage/")
+    )
 
-    return jsonify({"filename": "", "exists": False}), 200
+    required_csvs = [
+        "dataset_room_type_1.csv",
+        "dataset_room_type_2.csv",
+        "dataset_room_type_3.csv",
+        "dataset_room_type_4.csv",
+        "dataset_room_type_5.csv",
+        "dataset_room_type_6.csv",
+        "dataset_room_type_7.csv",
+        "dataset_room_type_11.csv",
+    ]
+
+    csv_exists = any(csv_file in os.listdir("datasets/") for csv_file in required_csvs)
+
+    exists = parquet_exists or csv_exists
+
+    return jsonify({"exists": exists}), 200
 
 
 @file_blueprint.route("/download/", methods=["GET"])
