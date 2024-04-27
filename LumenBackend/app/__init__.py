@@ -20,5 +20,6 @@ def create_app():
 
     UPLOAD_FOLDER = "storage/"
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    os.makedirs("datasets/", exist_ok=True)
 
     return app

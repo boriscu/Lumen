@@ -162,3 +162,5 @@ cython_debug/
 storage/
 data/
 logs/
+separated_models/
+datasets/
