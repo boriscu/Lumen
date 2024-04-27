@@ -101,9 +101,10 @@ def get_date_prediction():
                 day_of_week = current_date.isoweekday()
                 day_of_year = current_date.timetuple().tm_yday
 
+                event_coef = 1 if date_key in events_data else 0
+
                 for scaled_room_id in scaled_id_list:
                     weather_coef = 0
-                    event_coef = 0
 
                     model_input = np.array(
                         [
@@ -174,3 +175,14 @@ def get_date_prediction():
         return jsonify({"error": str(e)}), 400
 
     return jsonify(all_predictions), 200
+
+
+import json
+
+
+def read_events(file_path):
+    with open(file_path, "r") as file:
+        return json.load(file)
+
+
+events_data = read_events("events/events.json")
